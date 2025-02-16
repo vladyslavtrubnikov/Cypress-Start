@@ -1,37 +1,32 @@
-// export default class GaragePage {
-//     visit() {
-//       cy.visit('/panel/garage');
-//     }
-  
-//     addCar(brand, model, mileage) {
-//       // cy.get('.btn btn-primary').click();
-      
-
-      
-      
-//       cy.get('input[name="brand"]').type(brand);
-//       cy.get('input[name="model"]').type(model);
-//       cy.get('input[name="mileage"]').type(mileage);
-//       cy.get('button[type="submit"]').click();
-//     }
-//   }
-  
-  
 export default class GaragePage {
   visit() {
       cy.visit('/panel/garage');
 
-      // Очікуємо, поки сторінка оновиться після логіну
+      
+      // cy.intercept('GET', '**/api/cars').as('getCars');
+      // cy.wait('@getCars');
+
       cy.url().should('include', '/panel/garage');
   }
 
   addCar(brand, model, mileage) {
-      
-      cy.get('.panel-page_heading > .btn').click();
+      cy.intercept('POST', '**/api/cars').as('addCar'); 
+
+      cy.get('.panel-page_heading > .btn').should('be.visible').click();
       cy.get('.modal-body').should('be.visible');
       cy.get('#addCarBrand').select(brand);
       cy.get('#addCarModel').type(model);
       cy.get('input[name="mileage"]').type(mileage);
       cy.get('.modal-footer > .btn-primary').click();
+
+      cy.wait('@addCar').then((interception) => {
+        expect(interception.response.statusCode).to.eq(201);
+        const carId = interception.response.body.data.id;
+        expect(carId).to.exist;
+        
+        Cypress.env('createdCarId', carId);
+        cy.wrap(carId).as('createdCarId'); // Зберігаємо ID
+        cy.log('Saved car ID:', carId); // Додано для перевірки
+    });
   }
 }
