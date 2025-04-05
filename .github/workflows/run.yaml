@@ -1,0 +1,36 @@
+
+name: Run Cypress Tests in Docker
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        run: |
+          docker --version
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+          docker-compose --version
+
+      - name: Build Docker image with Cypress
+        run: |
+          docker build -t cypress-tests .
+
+      - name: Run Cypress tests inside Docker container
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/cypress cypress-tests npx cypress run --browser chrome --headless
+          docker run --rm -v ${{ github.workspace }}:/cypress cypress-tests npx cypress run --spec "cypress/e2e/**/*.cy.js" --browser chrome --headless
+
+    
