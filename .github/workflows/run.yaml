@@ -27,6 +27,9 @@ jobs:
       run: |
         docker build -t cypress-tests .
 
+    - name: List files in the working directory
+      run: ls -la /app    
+
     - name: Run Cypress tests in Docker container
       run: |
         docker run -v ${{ github.workspace }}:/app cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1 \
