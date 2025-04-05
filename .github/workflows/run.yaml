@@ -28,7 +28,7 @@ jobs:
         docker build -t cypress-tests .
 
     - name: List files in the working directory
-      run: ls -la /app    
+      run: ls -la /e2e   
 
     - name: Run Cypress tests in Docker container
       run: |
