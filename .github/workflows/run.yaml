@@ -32,7 +32,7 @@ jobs:
 
     - name: Run Cypress tests in Docker container
       run: |
-        docker run -v ${{ github.workspace }}:/app cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1 \
+        docker run -v ${{ github.workspace }}:/cypress/e2e/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1 \
           npx cypress run
 
     - name: Run tests inside Docker
