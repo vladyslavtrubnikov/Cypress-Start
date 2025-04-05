@@ -51,7 +51,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Set up Docker
         run: |
@@ -69,20 +69,6 @@ jobs:
           docker run --rm -v ${{ github.workspace }}:/cypress cypress-tests npx cypress run --browser chrome --headless
           # Вказуємо, що тести знаходяться в папці e2e всередині /cypress
           # Або можна явно вказати шлях до тестів
-          # docker run --rm -v ${{ github.workspace }}:/cypress cypress-tests npx cypress run --spec "cypress/e2e/**/*.cy.js" --browser chrome --headless
+          docker run --rm -v ${{ github.workspace }}:/cypress cypress-tests npx cypress run --spec "cypress/e2e/**/*.cy.js" --browser chrome --headless
 
-      - name: (Optional) Store Cypress test results
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: cypress-results
-          path: cypress/results
-          retention-days: 7
-
-      - name: (Optional) Store Cypress screenshots and videos
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: cypress-artifacts
-          path: cypress/screenshots cypress/videos
-          retention-days: 7
+    
